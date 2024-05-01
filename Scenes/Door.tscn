@@ -1,39 +1,40 @@
-[gd_scene load_steps=14 format=3 uid="uid://de1ppy61jgbwm"]
+[gd_scene load_steps=15 format=3 uid="uid://q8j7gehg673u"]
 
-[ext_resource type="Texture2D" uid="uid://cwu8pe72otqdy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Closiong (46x56).png" id="1_uskfv"]
-[ext_resource type="Texture2D" uid="uid://dxj63rpb8bvec" path="res://Assets/Kings and Pigs/Sprites/11-Door/Idle.png" id="1_xqitc"]
-[ext_resource type="Texture2D" uid="uid://b0rcxmbw0kwgy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Opening (46x56).png" id="3_kuiui"]
+[ext_resource type="Texture2D" uid="uid://cwu8pe72otqdy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Closiong (46x56).png" id="1_ixopv"]
+[ext_resource type="Texture2D" uid="uid://dxj63rpb8bvec" path="res://Assets/Kings and Pigs/Sprites/11-Door/Idle.png" id="2_82u6w"]
+[ext_resource type="Texture2D" uid="uid://b0rcxmbw0kwgy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Opening (46x56).png" id="3_fopnv"]
+[ext_resource type="Script" path="res://Scripts/Interactables/Door.gd" id="4_uxsm0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gviqn"]
-atlas = ExtResource("1_uskfv")
+atlas = ExtResource("1_ixopv")
 region = Rect2(0, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uqxft"]
-atlas = ExtResource("1_uskfv")
+atlas = ExtResource("1_ixopv")
 region = Rect2(46, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vfe76"]
-atlas = ExtResource("1_uskfv")
+atlas = ExtResource("1_ixopv")
 region = Rect2(92, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nw5vr"]
-atlas = ExtResource("3_kuiui")
+atlas = ExtResource("3_fopnv")
 region = Rect2(0, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tx3v4"]
-atlas = ExtResource("3_kuiui")
+atlas = ExtResource("3_fopnv")
 region = Rect2(46, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mb7fo"]
-atlas = ExtResource("3_kuiui")
+atlas = ExtResource("3_fopnv")
 region = Rect2(92, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e4afi"]
-atlas = ExtResource("3_kuiui")
+atlas = ExtResource("3_fopnv")
 region = Rect2(138, 0, 46, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g4hlt"]
-atlas = ExtResource("3_kuiui")
+atlas = ExtResource("3_fopnv")
 region = Rect2(184, 0, 46, 56)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lhmtd"]
@@ -54,7 +55,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_xqitc")
+"texture": ExtResource("2_82u6w")
 }],
 "loop": true,
 "name": &"Idle",
@@ -81,15 +82,20 @@ animations = [{
 "speed": 7.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fyhx3"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kv6lp"]
 size = Vector2(40, 45)
 
-[node name="Door" type="Area2D"]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Door" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_lhmtd")
 animation = &"Closing"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Interactable" type="Area2D" parent="."]
+collision_mask = 2
+script = ExtResource("4_uxsm0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+visibility_layer = 2
 position = Vector2(0, 2.5)
-shape = SubResource("RectangleShape2D_fyhx3")
+shape = SubResource("RectangleShape2D_kv6lp")
+
+[connection signal="body_entered" from="Interactable" to="Interactable" method="_on_body_entered"]

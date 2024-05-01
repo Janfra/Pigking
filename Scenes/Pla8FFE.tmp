@@ -1,11 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://dadt3djobs42d"]
+[gd_scene load_steps=16 format=3 uid="uid://dadt3djobs42d"]
 
 [ext_resource type="Script" path="res://Scripts/Player/PlayerCharacter.gd" id="1_xuwv3"]
-[ext_resource type="Texture2D" uid="uid://b4drgs376dp2l" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Fall (78x58).png" id="2_dw661"]
 [ext_resource type="Texture2D" uid="uid://cyjk7n5aurgli" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Idle (78x58).png" id="2_x71p2"]
-[ext_resource type="Texture2D" uid="uid://cl80se13hmwnx" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Jump (78x58).png" id="4_v0pla"]
-[ext_resource type="Texture2D" uid="uid://bc1gqv2f16f0e" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Ground (78x58).png" id="4_vhkpx"]
-[ext_resource type="Texture2D" uid="uid://c6b6qgvhqas6u" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Run (78x58).png" id="6_l2m6e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5sru0"]
 atlas = ExtResource("2_x71p2")
@@ -51,48 +47,8 @@ region = Rect2(702, 0, 78, 58)
 atlas = ExtResource("2_x71p2")
 region = Rect2(780, 0, 78, 58)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cwvmn"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(0, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5hnir"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(78, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dfk54"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(156, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dhece"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(234, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3y2gq"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(312, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m8qhb"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(390, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_negxw"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(468, 0, 78, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_si0at"]
-atlas = ExtResource("6_l2m6e")
-region = Rect2(546, 0, 78, 58)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_lvgaa"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_dw661")
-}],
-"loop": true,
-"name": &"Falling",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.2,
 "texture": SubResource("AtlasTexture_5sru0")
@@ -130,51 +86,6 @@ animations = [{
 "loop": true,
 "name": &"Idle",
 "speed": 11.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_v0pla")
-}],
-"loop": true,
-"name": &"Jumping",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_vhkpx")
-}],
-"loop": true,
-"name": &"Landed",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cwvmn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5hnir")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dfk54")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dhece")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3y2gq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m8qhb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_negxw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_si0at")
-}],
-"loop": true,
-"name": &"Walking",
-"speed": 11.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2l8v"]
@@ -190,8 +101,9 @@ unique_name_in_owner = true
 z_index = 1
 position = Vector2(8, -15)
 sprite_frames = SubResource("SpriteFrames_lvgaa")
-animation = &"Jumping"
+animation = &"Idle"
 autoplay = "Idle"
+frame_progress = 0.063528
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.25, -12.5)
