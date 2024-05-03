@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dh5a1vkmn0u8y"]
+[gd_scene load_steps=12 format=3 uid="uid://dh5a1vkmn0u8y"]
 
 [ext_resource type="PackedScene" uid="uid://dadt3djobs42d" path="res://Scenes/PlayerCharacter.tscn" id="1_mbr0f"]
 [ext_resource type="Texture2D" uid="uid://wtysgwxv6i5b" path="res://Assets/Kings and Pigs/Sprites/14-TileSets/Terrain (32x32).png" id="2_hktq5"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bqb2cyyravaiq" path="res://Scenes/Diamond.tscn" id="4_gqp87"]
 [ext_resource type="PackedScene" uid="uid://3ktea2kooye1" path="res://Scenes/SmallPlatform.tscn" id="5_8kogq"]
 [ext_resource type="PackedScene" uid="uid://q8j7gehg673u" path="res://Scenes/Door.tscn" id="6_jr2av"]
+[ext_resource type="PackedScene" uid="uid://dqedu4w1x3gpo" path="res://Scenes/Levels/First_level.tscn" id="7_6llm5"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kvtvr"]
 
@@ -390,6 +391,7 @@ sources/1 = SubResource("TileSetAtlasSource_1l1ab")
 [node name="GameNode" type="Node2D"]
 
 [node name="PlayerCharacter" parent="." instance=ExtResource("1_mbr0f")]
+position = Vector2(0, -10)
 
 [node name="WorldBottomBoundary" type="StaticBody2D" parent="."]
 position = Vector2(0, 217)
@@ -435,12 +437,12 @@ position = Vector2(530, -110)
 
 [node name="AnimatedSprite2D" parent="." instance=ExtResource("6_jr2av")]
 position = Vector2(0, -40)
+isOpened = true
 
 [node name="AnimatedSprite2D2" parent="." instance=ExtResource("6_jr2av")]
 position = Vector2(225, -260)
+animation = &"Idle"
+scene_To_Load_OnClosed = ExtResource("7_6llm5")
 
 [node name="SmallPlatform" parent="." instance=ExtResource("5_8kogq")]
 position = Vector2(500, -180)
-
-[editable path="AnimatedSprite2D"]
-[editable path="AnimatedSprite2D2"]

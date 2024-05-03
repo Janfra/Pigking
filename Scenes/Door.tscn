@@ -3,7 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cwu8pe72otqdy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Closiong (46x56).png" id="1_ixopv"]
 [ext_resource type="Texture2D" uid="uid://dxj63rpb8bvec" path="res://Assets/Kings and Pigs/Sprites/11-Door/Idle.png" id="2_82u6w"]
 [ext_resource type="Texture2D" uid="uid://b0rcxmbw0kwgy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Opening (46x56).png" id="3_fopnv"]
-[ext_resource type="Script" path="res://Scripts/Interactables/Door.gd" id="4_uxsm0"]
+[ext_resource type="Script" path="res://Scenes/Door.gd" id="4_pq2vn"]
+[ext_resource type="PackedScene" uid="uid://rbfnk3r811os" path="res://Scenes/components/interactable.tscn" id="5_lcmvq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gviqn"]
 atlas = ExtResource("1_ixopv")
@@ -82,20 +83,9 @@ animations = [{
 "speed": 7.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_kv6lp"]
-size = Vector2(40, 45)
-
 [node name="Door" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_lhmtd")
 animation = &"Closing"
+script = ExtResource("4_pq2vn")
 
-[node name="Interactable" type="Area2D" parent="."]
-collision_mask = 2
-script = ExtResource("4_uxsm0")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
-visibility_layer = 2
-position = Vector2(0, 2.5)
-shape = SubResource("RectangleShape2D_kv6lp")
-
-[connection signal="body_entered" from="Interactable" to="Interactable" method="_on_body_entered"]
+[node name="Interactable" parent="." instance=ExtResource("5_lcmvq")]

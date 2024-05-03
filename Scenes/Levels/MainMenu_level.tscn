@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dqedu4w1x3gpo"]
+[gd_scene format=3 uid="uid://m3wuphnxa5jt"]
 
-[node name="first_level" type="Node2D"]
+[node name="MainMenu" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -16,7 +16,6 @@ offset_right = 48.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "FIRST LEVEL
-"
+text = "MAIN MENU"
 horizontal_alignment = 1
 vertical_alignment = 1

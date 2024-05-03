@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dadt3djobs42d"]
+[gd_scene load_steps=30 format=3 uid="uid://dadt3djobs42d"]
 
 [ext_resource type="Script" path="res://Scripts/Player/PlayerCharacter.gd" id="1_xuwv3"]
 [ext_resource type="Texture2D" uid="uid://b4drgs376dp2l" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Fall (78x58).png" id="2_dw661"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://cl80se13hmwnx" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Jump (78x58).png" id="4_v0pla"]
 [ext_resource type="Texture2D" uid="uid://bc1gqv2f16f0e" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Ground (78x58).png" id="4_vhkpx"]
 [ext_resource type="Texture2D" uid="uid://c6b6qgvhqas6u" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Run (78x58).png" id="6_l2m6e"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerJumpHandler.gd" id="7_04qp0"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerAnimationHandler.gd" id="8_oju3h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5sru0"]
 atlas = ExtResource("2_x71p2")
@@ -201,3 +203,13 @@ shape = SubResource("RectangleShape2D_u2l8v")
 position = Vector2(-2, -15)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
+
+[node name="PlayerJumpHandler" type="Node" parent="." node_paths=PackedStringArray("player")]
+unique_name_in_owner = true
+script = ExtResource("7_04qp0")
+player = NodePath("..")
+
+[node name="PlayerAnimationHandler" type="Node" parent="." node_paths=PackedStringArray("animated_sprite")]
+unique_name_in_owner = true
+script = ExtResource("8_oju3h")
+animated_sprite = NodePath("../AnimatedSprite2D")

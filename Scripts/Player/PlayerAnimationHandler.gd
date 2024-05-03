@@ -1,8 +1,8 @@
-extends RefCounted
-
+extends Node
 class_name PlayerAnimationHandler
 
-var animated_sprite:AnimatedSprite2D
+@export_subgroup("Animations")
+@export var animated_sprite:AnimatedSprite2D
 var override_input:bool = false
 
 func _init(animator: AnimatedSprite2D):
