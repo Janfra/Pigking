@@ -182,10 +182,11 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2l8v"]
 size = Vector2(13.5, 23)
 
-[node name="PlayerCharacter" type="CharacterBody2D"]
+[node name="PlayerCharacter" type="CharacterBody2D" node_paths=PackedStringArray("animation_Handler")]
 position = Vector2(0, -2)
 collision_layer = 2
 script = ExtResource("1_xuwv3")
+animation_Handler = NodePath("PlayerAnimationHandler")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
@@ -209,7 +210,8 @@ unique_name_in_owner = true
 script = ExtResource("7_04qp0")
 player = NodePath("..")
 
-[node name="PlayerAnimationHandler" type="Node" parent="." node_paths=PackedStringArray("animated_sprite")]
+[node name="PlayerAnimationHandler" type="Node" parent="." node_paths=PackedStringArray("animated_sprite", "walk_particles")]
 unique_name_in_owner = true
 script = ExtResource("8_oju3h")
 animated_sprite = NodePath("../AnimatedSprite2D")
+walk_particles = NodePath("")

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dxj63rpb8bvec" path="res://Assets/Kings and Pigs/Sprites/11-Door/Idle.png" id="2_82u6w"]
 [ext_resource type="Texture2D" uid="uid://b0rcxmbw0kwgy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Opening (46x56).png" id="3_fopnv"]
 [ext_resource type="Script" path="res://Scenes/Door.gd" id="4_pq2vn"]
-[ext_resource type="PackedScene" uid="uid://rbfnk3r811os" path="res://Scenes/components/interactable.tscn" id="5_lcmvq"]
+[ext_resource type="PackedScene" uid="uid://rbfnk3r811os" path="res://Scenes/Components/interactable.tscn" id="5_lcmvq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gviqn"]
 atlas = ExtResource("1_ixopv")

@@ -3,14 +3,8 @@ class_name PlayerAnimationHandler
 
 @export_subgroup("Animations")
 @export var animated_sprite:AnimatedSprite2D
+@export var walk_particles:GPUParticles2D
 var override_input:bool = false
-
-func _init(animator: AnimatedSprite2D):
-	animated_sprite = animator
-	if !animated_sprite:
-		print("No animation sprite set on player animation handler")
-	else:
-		print("Player animation handler initialized")
 
 func handle_movement_animations(velocity: Vector2, input: Vector2, latest_valid_input: Vector2):
 	if !animated_sprite:

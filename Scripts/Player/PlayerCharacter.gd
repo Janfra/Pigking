@@ -12,11 +12,10 @@ const MOVE_POSITIVE_X_INPUT = "move_right"
 const INTERACT_INPUT = "interact"
 
 # References
-@onready var animation_Handler:PlayerAnimationHandler = %PlayerAnimationHandler
+@export var animation_Handler:PlayerAnimationHandler
 @onready var player_Jump_Handler:PlayerJumpHandler = $PlayerJumpHandler
 
 var InteractionNode:Interactable 
-
 var input:Vector2 
 var last_Valid_Input:Vector2 
 
@@ -26,7 +25,8 @@ func _init():
 	assert(InputMap.has_action(MOVE_NEGATIVE_X_INPUT), "Move negative action name has been changed, update to match")
 	assert(InputMap.has_action(MOVE_POSITIVE_X_INPUT), "Move positive action name has been changed, update to match")
 	assert(InputMap.has_action(INTERACT_INPUT), "Interact action name has been changed, update to match")
-	
+	if !animation_Handler:
+		animation_Handler = %PlayerAnimationHandler
 
 func _unhandled_key_input(event):
 	var isHandled := false
