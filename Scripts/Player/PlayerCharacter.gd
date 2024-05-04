@@ -25,8 +25,6 @@ func _init():
 	assert(InputMap.has_action(MOVE_NEGATIVE_X_INPUT), "Move negative action name has been changed, update to match")
 	assert(InputMap.has_action(MOVE_POSITIVE_X_INPUT), "Move positive action name has been changed, update to match")
 	assert(InputMap.has_action(INTERACT_INPUT), "Interact action name has been changed, update to match")
-	if !animation_Handler:
-		animation_Handler = %PlayerAnimationHandler
 
 func _unhandled_key_input(event):
 	var isHandled := false
@@ -34,7 +32,7 @@ func _unhandled_key_input(event):
 		isHandled = true
 		player_Jump_Handler.try_jump()
 	
-	if InputMap.action_has_event(MOVE_NEGATIVE_X_INPUT, event) or InputMap.action_has_event(MOVE_POSITIVE_X_INPUT, event):
+	if InputMap.action_has_event(MOVE_NEGATIVE_X_INPUT, event) || InputMap.action_has_event(MOVE_POSITIVE_X_INPUT, event):
 		isHandled = true
 		input.x = Input.get_axis(MOVE_NEGATIVE_X_INPUT, MOVE_POSITIVE_X_INPUT)
 	

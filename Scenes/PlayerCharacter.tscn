@@ -209,6 +209,7 @@ position_smoothing_enabled = true
 unique_name_in_owner = true
 script = ExtResource("7_04qp0")
 player = NodePath("..")
+jumpQueued_time = 0.1
 
 [node name="PlayerAnimationHandler" type="Node" parent="." node_paths=PackedStringArray("animated_sprite", "walk_particles")]
 unique_name_in_owner = true
