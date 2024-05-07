@@ -9,6 +9,7 @@ const SPEED_SLOWDOWN_MULTIPLIER = 0.3
 const JUMP_INPUT = "jump"
 const MOVE_NEGATIVE_X_INPUT = "move_left"
 const MOVE_POSITIVE_X_INPUT = "move_right"
+const MOVE_NEGATIVE_Y_INPUT = "move_down"
 const INTERACT_INPUT = "interact"
 
 # References
@@ -33,6 +34,11 @@ func _unhandled_key_input(event) -> void:
 		player_Jump_Handler.try_jump()
 	elif Input.is_action_just_released(JUMP_INPUT):
 		player_Jump_Handler.try_jump_cut()
+	
+	if Input.is_action_just_pressed(MOVE_NEGATIVE_Y_INPUT):
+		player_Jump_Handler.increase_fall_speed(true)
+	elif Input.is_action_just_released(MOVE_NEGATIVE_Y_INPUT):
+		player_Jump_Handler.increase_fall_speed(false)
 	
 	if InputMap.action_has_event(MOVE_NEGATIVE_X_INPUT, event) || InputMap.action_has_event(MOVE_POSITIVE_X_INPUT, event):
 		input.x = Input.get_axis(MOVE_NEGATIVE_X_INPUT, MOVE_POSITIVE_X_INPUT)

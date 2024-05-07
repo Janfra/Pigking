@@ -433,7 +433,7 @@ position = Vector2(355, 0)
 position = Vector2(400, 35)
 
 [node name="SmallPlatform" parent="Platforms" instance=ExtResource("5_8kogq")]
-position = Vector2(530, -110)
+position = Vector2(531, -105)
 
 [node name="SmallPlatform4" parent="Platforms" instance=ExtResource("5_8kogq")]
 position = Vector2(500, -180)

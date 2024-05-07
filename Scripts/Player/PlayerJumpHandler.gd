@@ -3,15 +3,24 @@ class_name PlayerJumpHandler
 
 const MINIMUM_GRAVITY_MULTIPLIER = 0.01
 
-#region Edit Variables
-@export_subgroup("Jump")
+#region Editable Variables
+@export_group("Jump")
+@export_subgroup("Dependencies")
 @export var player:CharacterBody2D
-@export var coyoteTime:float = 0.2
-@export var jumpQueuedTime:float = 0.2
+
+@export_subgroup("Velocity")
 @export var jumpVelocity:float = -300.0
 @export var jumpCutMultiplier:float = 0.2
+
+@export_subgroup("Falling Speed")
 @export var fallingGravityMultiplier:float = 1
 @export var ascendingGravityMultiplier:float = 1
+@export var downInputGravityMultiplier:float = 1.2
+@export var maxFallSpeed:float = 300
+
+@export_subgroup("Grace Timers")
+@export var coyoteTime:float = 0.2
+@export var jumpQueuedTime:float = 0.2
 #endregion
 
 #region Logic booleans
@@ -28,6 +37,8 @@ var canJump:bool = false
 var canJumpCut:bool = false
 
 var isFalling:bool = false
+
+var isDownInput:bool = false
 #endregion
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -50,6 +61,11 @@ func try_jump_cut() -> void:
 		return
 	
 	_cut_jump()
+	
+
+func increase_fall_speed(isInput:bool) -> void:
+	isDownInput = isInput
+	
 
 func _get_configuration_warnings():
 	if !player:
@@ -90,10 +106,10 @@ func process_jump(delta:float) -> void:
 		printerr("No player assigned to", owner.name)
 		return
 	
-	if hasJumped && canJump:
+	if _is_jump_queued():
 		_jump()
 	elif !player.is_on_floor():
-		_handle_falling(delta)
+		_handle_off_ground(delta)
 	else:
 		_handle_landing()
 	 
@@ -101,18 +117,16 @@ func process_jump(delta:float) -> void:
 		_queue_jump()
 	
 
-func _handle_falling(delta: float) -> void:
-		# Add the gravity.
-		isFalling = player.velocity.y > 0
-		
-		if isFalling:
-			canJumpCut = false
-			player.velocity.y += (gravity * fallingGravityMultiplier) * delta
-		else:
-			player.velocity.y += (gravity * ascendingGravityMultiplier) * delta
-		
-		if _should_coyote_time_start():
-			_start_coyote_time()
+func _handle_off_ground(delta: float) -> void:
+	isFalling = player.velocity.y > 0
+	_apply_gravity(delta)
+	
+	if isFalling:
+		canJumpCut = false
+		_clamp_fall_speed()
+	
+	if _should_coyote_time_start():
+		_start_coyote_time()
 	
 
 func _handle_landing() -> void:
@@ -121,6 +135,23 @@ func _handle_landing() -> void:
 	canJumpCut = true
 	canJump = true
 	_stop_coyote_time()
+	
+
+#endregion
+
+#region Falling Speed / Gravity
+
+func _clamp_fall_speed() -> void:
+	player.velocity.y = min(maxFallSpeed, player.velocity.y)
+
+func _apply_gravity(delta:float) -> void:
+	if isDownInput:
+		player.velocity.y += (gravity * downInputGravityMultiplier) * delta
+	else:
+		if isFalling:
+			player.velocity.y += (gravity * fallingGravityMultiplier) * delta
+		else:
+			player.velocity.y += (gravity * ascendingGravityMultiplier) * delta
 	
 
 #endregion
@@ -137,9 +168,13 @@ func _cut_jump() -> void:
 	canJumpCut = false
 	
 
+func _is_jump_queued() -> bool:
+	return hasJumped && canJump
+
 func _queue_jump() -> void:
 	hasJumped = true
 	canJump = true
+	jumpInput_Timer.stop()
 
 func _is_jump_valid() -> bool:
 	return !coyoteTime_Timer.is_stopped() || player.is_on_floor()
