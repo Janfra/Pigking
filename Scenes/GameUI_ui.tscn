@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3xrh8ydycedm"]
+
+[ext_resource type="Texture2D" uid="uid://crum5ply484u" path="res://Assets/Kings and Pigs/Sprites/12-Live and Coins/Live Bar.png" id="1_k50t1"]
+[ext_resource type="Texture2D" uid="uid://cg0j42jsdkkk0" path="res://Assets/Kings and Pigs/Sprites/12-Live and Coins/Big Heart Idle (18x14).png" id="2_5a2sa"]
+
+[node name="GameUI" type="CanvasLayer"]
+layer = 10
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 66.0
+offset_bottom = 40.0
+texture = ExtResource("1_k50t1")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TextureRect"]
+layout_mode = 2
+offset_left = 10.0
+offset_top = 13.0
+offset_right = 55.0
+offset_bottom = 27.0
+max_value = 3.0
+value = 2.0
+texture_progress = ExtResource("2_5a2sa")

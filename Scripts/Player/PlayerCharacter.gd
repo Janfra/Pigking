@@ -19,31 +19,29 @@ var InteractionNode:Interactable
 var input:Vector2 
 var last_Valid_Input:Vector2 
 
-func _init():
+# TODO: Create regions
+
+func _init() -> void:
 	# Need to find way of verifying that input names are always correct
 	assert(InputMap.has_action(JUMP_INPUT), "Jump action name has been changed, update to match")
 	assert(InputMap.has_action(MOVE_NEGATIVE_X_INPUT), "Move negative action name has been changed, update to match")
 	assert(InputMap.has_action(MOVE_POSITIVE_X_INPUT), "Move positive action name has been changed, update to match")
 	assert(InputMap.has_action(INTERACT_INPUT), "Interact action name has been changed, update to match")
 
-func _unhandled_key_input(event):
-	var isHandled := false
-	if Input.is_action_just_pressed(JUMP_INPUT):
-		isHandled = true
+func _unhandled_key_input(event) -> void:
+	if Input.is_action_just_pressed(JUMP_INPUT, true):
 		player_Jump_Handler.try_jump()
+	elif Input.is_action_just_released(JUMP_INPUT):
+		player_Jump_Handler.try_jump_cut()
 	
 	if InputMap.action_has_event(MOVE_NEGATIVE_X_INPUT, event) || InputMap.action_has_event(MOVE_POSITIVE_X_INPUT, event):
-		isHandled = true
 		input.x = Input.get_axis(MOVE_NEGATIVE_X_INPUT, MOVE_POSITIVE_X_INPUT)
 	
 	if InteractionNode && Input.is_action_just_pressed("interact"):
 		InteractionNode.interact()
 	
-	if isHandled:
-		get_viewport().set_input_as_handled()
-	
 
-func _physics_process(delta):
+func _physics_process(delta) -> void:
 	player_Jump_Handler.process_jump(delta)
 	_handle_sideways_movement()
 	
@@ -51,7 +49,7 @@ func _physics_process(delta):
 	move_and_slide()
 	
 
-func _handle_sideways_movement():
+func _handle_sideways_movement() -> void:
 	if input.x != 0:
 		velocity.x = input.x * SPEED
 		last_Valid_Input.x = input.x
@@ -59,8 +57,8 @@ func _handle_sideways_movement():
 		velocity.x = move_toward(velocity.x, 0, SPEED * SPEED_SLOWDOWN_MULTIPLIER)
 	
 
-func start_interaction_process(NewInteractionNode: Interactable):
+func start_interaction_process(NewInteractionNode: Interactable) -> void:
 	InteractionNode = NewInteractionNode
 
-func stop_interaction_process():
+func stop_interaction_process() -> void:
 	InteractionNode = null

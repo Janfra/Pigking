@@ -1,33 +1,74 @@
 extends Node
 class_name PlayerJumpHandler
 
-@export_subgroup("Jump")
-@export var player:CharacterBody2D 
-@export var coyote_time:float = 0.2
-@export var jumpQueued_time:float = 0.2
-@export var jump_Velocity:float = -300.0
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-@export var gravity:float = ProjectSettings.get_setting("physics/2d/default_gravity")	
+const MINIMUM_GRAVITY_MULTIPLIER = 0.01
 
+#region Edit Variables
+@export_subgroup("Jump")
+@export var player:CharacterBody2D
+@export var coyoteTime:float = 0.2
+@export var jumpQueuedTime:float = 0.2
+@export var jumpVelocity:float = -300.0
+@export var jumpCutMultiplier:float = 0.2
+@export var fallingGravityMultiplier:float = 1
+@export var ascendingGravityMultiplier:float = 1
+#endregion
+
+#region Logic booleans
+# INFO: Has coyote time already being applied
+var hasCoyoteTime:bool = false
+
+# INFO: Has the player already jumped
+var hasJumped:bool = false
+
+# INFO: Is the player able to perform a jump
+var canJump:bool = false
+
+# INFO: Can jump cut be performed
+var canJumpCut:bool = false
+
+var isFalling:bool = false
+#endregion
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+@onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var coyoteTime_Timer:Timer 
 var jumpInput_Timer:Timer
 
-var hasJumped:bool = false
-var hasCoyoteTime:bool = false
-var canJump:bool = false
+func try_jump() -> void:
+	if hasJumped:
+		return
+	
+	if !_is_jump_valid():
+		jumpInput_Timer.start(jumpQueuedTime)
+		return
+	
+	_queue_jump()
 
-func _init():
+func try_jump_cut() -> void:
+	if !hasJumped || !canJumpCut:
+		return
+	
+	_cut_jump()
+
+func _get_configuration_warnings():
+	if !player:
+		return ["No player set for jumping"]
+	
+	return []
+
+#region Init
+func _init() -> void:
 	_setup_coyote_time_timer()
 	_setup_jump_input_timer()
-	if gravity == 0:
-		gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+	update_configuration_warnings()
 	
 
-func _ready():
+func _ready() -> void:
 	assert(player, "Add player reference to player jump handler")
 	
 
-func _setup_coyote_time_timer():
+func _setup_coyote_time_timer() -> void:
 	coyoteTime_Timer = Timer.new()
 	add_child(coyoteTime_Timer)
 	coyoteTime_Timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
@@ -35,43 +76,84 @@ func _setup_coyote_time_timer():
 	coyoteTime_Timer.timeout.connect(self._invalidate_coyote_time.bind())
 	
 
-func _setup_jump_input_timer():
+func _setup_jump_input_timer() -> void:
 	jumpInput_Timer = Timer.new()
 	add_child(jumpInput_Timer)
 	jumpInput_Timer.process_callback = Timer.TIMER_PROCESS_IDLE
 	jumpInput_Timer.one_shot = true
 	
+#endregion
 
-func process_jump(delta:float):
+#region General Handling
+func process_jump(delta:float) -> void:
 	if !player:
 		printerr("No player assigned to", owner.name)
 		return
-	
-	if(!jumpInput_Timer.is_stopped() && _is_jump_valid()):
-		_queue_jump()
 	
 	if hasJumped && canJump:
 		_jump()
 	elif !player.is_on_floor():
 		_handle_falling(delta)
 	else:
-		hasJumped = false
-		hasCoyoteTime = false
-		canJump = true
-		_stop_coyote_time()
+		_handle_landing()
 	 
+	if(!jumpInput_Timer.is_stopped() && _is_jump_valid()):
+		_queue_jump()
+	
 
-func _jump():
+func _handle_falling(delta: float) -> void:
+		# Add the gravity.
+		isFalling = player.velocity.y > 0
+		
+		if isFalling:
+			canJumpCut = false
+			player.velocity.y += (gravity * fallingGravityMultiplier) * delta
+		else:
+			player.velocity.y += (gravity * ascendingGravityMultiplier) * delta
+		
+		if _should_coyote_time_start():
+			_start_coyote_time()
+	
+
+func _handle_landing() -> void:
+	hasJumped = false
+	hasCoyoteTime = false
+	canJumpCut = true
+	canJump = true
+	_stop_coyote_time()
+	
+
+#endregion
+
+#region Jump logic
+func _jump() -> void:
 	player.velocity.y = 0
-	player.velocity.y += jump_Velocity
+	player.velocity.y += jumpVelocity
 	canJump = false
 	hasJumped = true
 
-func _start_coyote_time():
-	coyoteTime_Timer.start(coyote_time)
+func _cut_jump() -> void:
+	player.velocity.y -= player.velocity.y * (1 - jumpCutMultiplier)
+	canJumpCut = false
 	
 
-func _stop_coyote_time():
+func _queue_jump() -> void:
+	hasJumped = true
+	canJump = true
+
+func _is_jump_valid() -> bool:
+	return !coyoteTime_Timer.is_stopped() || player.is_on_floor()
+#endregion
+
+#region Coyote Time
+func _should_coyote_time_start() -> bool:
+	return !hasJumped && !hasCoyoteTime && coyoteTime_Timer.is_stopped()
+
+func _start_coyote_time() -> void:
+	coyoteTime_Timer.start(coyoteTime)
+	
+
+func _stop_coyote_time() -> void:
 	if coyoteTime_Timer.is_stopped():
 		return
 	
@@ -79,29 +161,7 @@ func _stop_coyote_time():
 	hasCoyoteTime = true
 	
 
-func _invalidate_coyote_time():
+func _invalidate_coyote_time() -> void:
 	hasCoyoteTime = true
 	
-
-func _handle_falling(delta: float):
-		# Add the gravity.
-		player.velocity.y += gravity * delta
-		
-		if !hasJumped && !hasCoyoteTime && coyoteTime_Timer.is_stopped():
-			_start_coyote_time()
-	
-
-func try_jump():
-	if !_is_jump_valid():
-		jumpInput_Timer.start(jumpQueued_time)
-		return
-	
-	_queue_jump()
-
-
-func _queue_jump():
-	hasJumped = true
-	canJump = true
-
-func _is_jump_valid():
-	return !coyoteTime_Timer.is_stopped() || player.is_on_floor()
+#endregion
