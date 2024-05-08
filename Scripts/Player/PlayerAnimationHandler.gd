@@ -1,21 +1,29 @@
 extends Node
 class_name PlayerAnimationHandler
 
-@export_subgroup("Animations")
+@export_group("Animations")
 @export var animated_sprite:AnimatedSprite2D
+@export var spriteXOffsetOnFlip:float
 @export var walk_particles:GPUParticles2D
 var override_input:bool = false
 
-func handle_movement_animations(velocity: Vector2, input: Vector2, latest_valid_input: Vector2) -> void:
+func handle_movement_animations(velocity: Vector2, input: Vector2, latestValidInput: Vector2) -> void:
 	if !animated_sprite:
 		return
 	
-	_set_facing_direction(latest_valid_input)
+	_set_facing_direction(latestValidInput)
 	_animate_sideways_movement(velocity, input)
 	_animate_falling(velocity)
 
 func _set_facing_direction(input : Vector2) -> void:
-	animated_sprite.flip_h = input.x < 0
+	var isSpriteFlipped = input.x < 0
+	animated_sprite.flip_h = isSpriteFlipped
+	
+	if isSpriteFlipped:
+		animated_sprite.offset.x = spriteXOffsetOnFlip
+	else:
+		animated_sprite.offset.x = 0.0
+	
 
 func _animate_sideways_movement(velocity: Vector2, input : Vector2) -> void:
 	var isMoving = velocity.x != 0

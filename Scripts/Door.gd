@@ -15,10 +15,7 @@ func on_interacted() -> void:
 	_load_level()
 
 func _load_level() -> void:
-	if isOpened && MAIN_MENU_LEVEL.can_instantiate():
-		get_tree().change_scene_to_packed(MAIN_MENU_LEVEL)
-	elif MAIN_MENU_LEVEL.can_instantiate():
-		assert(scene_To_Load_OnClosed, "Scene to load not set on " + self.name)
-		get_tree().change_scene_to_packed(scene_To_Load_OnClosed)
+	if isOpened:
+		LevelHandler.load_level(self, MAIN_MENU_LEVEL)
 	else:
-		printerr("Main menu not found")
+		LevelHandler.load_level(self, scene_To_Load_OnClosed)

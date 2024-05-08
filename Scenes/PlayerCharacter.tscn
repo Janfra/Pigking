@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dadt3djobs42d"]
+[gd_scene load_steps=33 format=3 uid="uid://dadt3djobs42d"]
 
 [ext_resource type="Script" path="res://Scripts/Player/PlayerCharacter.gd" id="1_xuwv3"]
 [ext_resource type="Texture2D" uid="uid://b4drgs376dp2l" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Fall (78x58).png" id="2_dw661"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://c6b6qgvhqas6u" path="res://Assets/Kings and Pigs/Sprites/01-King Human/Run (78x58).png" id="6_l2m6e"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerJumpHandler.gd" id="7_04qp0"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerAnimationHandler.gd" id="8_oju3h"]
+[ext_resource type="Script" path="res://Scripts/NodeComponents/Health.gd" id="9_kpo5d"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5sru0"]
 atlas = ExtResource("2_x71p2")
@@ -231,6 +232,11 @@ coyoteTime = 0.15
 unique_name_in_owner = true
 script = ExtResource("8_oju3h")
 animated_sprite = NodePath("../AnimatedSprite2D")
+spriteXOffsetOnFlip = -15.5
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("9_kpo5d")
+maxHealth = 3
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 visible = false

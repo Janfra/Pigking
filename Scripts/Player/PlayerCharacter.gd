@@ -63,8 +63,8 @@ func _handle_sideways_movement() -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED * SPEED_SLOWDOWN_MULTIPLIER)
 	
 
-func start_interaction_process(NewInteractionNode: Interactable) -> void:
-	InteractionNode = NewInteractionNode
+func start_interaction_process(newInteractionNode: Interactable) -> void:
+	InteractionNode = newInteractionNode
 
 func stop_interaction_process() -> void:
 	InteractionNode = null

@@ -46,6 +46,14 @@ var isDownInput:bool = false
 var coyoteTime_Timer:Timer 
 var jumpInput_Timer:Timer
 
+#region Warning Check
+func _get_configuration_warnings():
+	if !player:
+		return ["No player set for jumping"]
+	
+	return []
+#endregion
+
 func try_jump() -> void:
 	if hasJumped:
 		return
@@ -67,12 +75,6 @@ func increase_fall_speed(isInput:bool) -> void:
 	isDownInput = isInput
 	
 
-func _get_configuration_warnings():
-	if !player:
-		return ["No player set for jumping"]
-	
-	return []
-
 #region Init
 func _init() -> void:
 	_setup_coyote_time_timer()
@@ -87,6 +89,7 @@ func _ready() -> void:
 func _setup_coyote_time_timer() -> void:
 	coyoteTime_Timer = Timer.new()
 	add_child(coyoteTime_Timer)
+	coyoteTime_Timer.owner = owner
 	coyoteTime_Timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
 	coyoteTime_Timer.one_shot = true
 	coyoteTime_Timer.timeout.connect(self._invalidate_coyote_time.bind())
@@ -95,6 +98,7 @@ func _setup_coyote_time_timer() -> void:
 func _setup_jump_input_timer() -> void:
 	jumpInput_Timer = Timer.new()
 	add_child(jumpInput_Timer)
+	jumpInput_Timer.owner = owner
 	jumpInput_Timer.process_callback = Timer.TIMER_PROCESS_IDLE
 	jumpInput_Timer.one_shot = true
 	

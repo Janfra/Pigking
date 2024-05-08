@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3o03q7d0vm0w"]
+
+[ext_resource type="PackedScene" uid="uid://dno82x0x33fko" path="res://Scenes/Components/ApplyDamageOnTouch.tscn" id="1_6u464"]
+[ext_resource type="Texture2D" uid="uid://1vm1xpvtgaob" path="res://Assets/Kings and Pigs/Sprites/10-Cannon/Cannon Ball.png" id="2_kiwud"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8jknn"]
+radius = 6.5
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kbtgg"]
+radius = 6.0
+
+[node name="CannonBall" type="AnimatableBody2D"]
+collision_mask = 3
+
+[node name="ApplyDamageOnTouch" parent="." instance=ExtResource("1_6u464")]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="ApplyDamageOnTouch" index="0"]
+shape = SubResource("CircleShape2D_8jknn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kbtgg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_kiwud")
+
+[editable path="ApplyDamageOnTouch"]

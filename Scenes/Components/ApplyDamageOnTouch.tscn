@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dno82x0x33fko"]
+
+[ext_resource type="Script" path="res://Scripts/NodeComponents/ApplyDamageOnTouch.gd" id="1_o8t73"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3p77d"]
+
+[node name="ApplyDamageOnTouch" type="Area2D"]
+script = ExtResource("1_o8t73")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_3p77d")
+debug_color = Color(0, 0.6, 0.701961, 0.286275)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
