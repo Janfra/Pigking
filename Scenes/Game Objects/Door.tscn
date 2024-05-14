@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://q8j7gehg673u"]
+[gd_scene load_steps=16 format=3 uid="uid://q8j7gehg673u"]
 
 [ext_resource type="Texture2D" uid="uid://cwu8pe72otqdy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Closiong (46x56).png" id="1_ixopv"]
 [ext_resource type="Texture2D" uid="uid://dxj63rpb8bvec" path="res://Assets/Kings and Pigs/Sprites/11-Door/Idle.png" id="2_82u6w"]
 [ext_resource type="Texture2D" uid="uid://b0rcxmbw0kwgy" path="res://Assets/Kings and Pigs/Sprites/11-Door/Opening (46x56).png" id="3_fopnv"]
 [ext_resource type="Script" path="res://Scripts/Door.gd" id="4_pq2vn"]
 [ext_resource type="PackedScene" uid="uid://rbfnk3r811os" path="res://Scenes/Components/Interactable.tscn" id="5_lcmvq"]
+[ext_resource type="Script" path="res://Scripts/NodeComponents/LevelTransferDataHandler.gd" id="6_3gedr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gviqn"]
 atlas = ExtResource("1_ixopv")
@@ -85,7 +86,16 @@ animations = [{
 
 [node name="Door" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_lhmtd")
-animation = &"Closing"
+animation = &"Opening"
 script = ExtResource("4_pq2vn")
 
 [node name="Interactable" parent="." instance=ExtResource("5_lcmvq")]
+unique_name_in_owner = true
+
+[node name="LevelTransferDataHandler" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_3gedr")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1, 14)

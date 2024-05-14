@@ -1,5 +1,11 @@
-extends CharacterBody2D
 class_name PlayerCharacter
+extends CharacterBody2D
+
+# Request Constants
+enum DataRequestKeys{
+	HEALTH,
+	
+}
 
 # Constants
 const SPEED = 170.0
@@ -12,13 +18,16 @@ const MOVE_POSITIVE_X_INPUT = "move_right"
 const MOVE_NEGATIVE_Y_INPUT = "move_down"
 const INTERACT_INPUT = "interact"
 
-# References
-@export var animation_Handler:PlayerAnimationHandler
-@onready var player_Jump_Handler:PlayerJumpHandler = $PlayerJumpHandler
+# Set References
+@export var animation_handler:PlayerAnimationHandler
 
-var InteractionNode:Interactable 
+var interaction_node:Interactable 
 var input:Vector2 
-var last_Valid_Input:Vector2 
+var last_valid_input:Vector2 
+
+@onready var player_jump_handler:PlayerJumpHandler = $PlayerJumpHandler
+@onready var level_transfer_data_handler:LevelTransferDataHandler = %LevelTransferDataHandler
+@onready var health_component:HealthComponent = %HealthComponent
 
 # TODO: Create regions
 
@@ -28,43 +37,72 @@ func _init() -> void:
 	assert(InputMap.has_action(MOVE_NEGATIVE_X_INPUT), "Move negative action name has been changed, update to match")
 	assert(InputMap.has_action(MOVE_POSITIVE_X_INPUT), "Move positive action name has been changed, update to match")
 	assert(InputMap.has_action(INTERACT_INPUT), "Interact action name has been changed, update to match")
+	
+	EventBus.on_door_spawn_location_set.connect(_enter_level.bind())
+
+func _ready() -> void:
+	if level_transfer_data_handler:
+		level_transfer_data_handler.set_data_requests_keys(DataRequestKeys.values())
+		_load_transfer_data()
+		EventBus.on_level_opened.connect(_set_transfer_data.bind())
+		
+	
+	
+	assert(animation_handler, "Set animation handler")
+	assert(player_jump_handler, "Set jump handler")
+	
+
+func _load_transfer_data():
+	var health = level_transfer_data_handler.request_data(DataRequestKeys.HEALTH)
+	if health:
+		health_component.health = health
+	
+
+func _set_transfer_data() -> void:
+	if health_component:
+		level_transfer_data_handler.set_data(DataRequestKeys.HEALTH, health_component.health)
+	
+
+func _enter_level(spawnLocation:Vector2):
+	global_position = spawnLocation
+	
 
 func _unhandled_key_input(event) -> void:
 	if Input.is_action_just_pressed(JUMP_INPUT, true):
-		player_Jump_Handler.try_jump()
+		player_jump_handler.try_jump()
 	elif Input.is_action_just_released(JUMP_INPUT):
-		player_Jump_Handler.try_jump_cut()
+		player_jump_handler.try_jump_cut()
 	
 	if Input.is_action_just_pressed(MOVE_NEGATIVE_Y_INPUT):
-		player_Jump_Handler.increase_fall_speed(true)
+		player_jump_handler.increase_fall_speed(true)
 	elif Input.is_action_just_released(MOVE_NEGATIVE_Y_INPUT):
-		player_Jump_Handler.increase_fall_speed(false)
+		player_jump_handler.increase_fall_speed(false)
 	
 	if InputMap.action_has_event(MOVE_NEGATIVE_X_INPUT, event) || InputMap.action_has_event(MOVE_POSITIVE_X_INPUT, event):
 		input.x = Input.get_axis(MOVE_NEGATIVE_X_INPUT, MOVE_POSITIVE_X_INPUT)
 	
-	if InteractionNode && Input.is_action_just_pressed("interact"):
-		InteractionNode.interact()
+	if interaction_node && Input.is_action_just_pressed("interact"):
+		interaction_node.interact()
 	
 
 func _physics_process(delta) -> void:
-	player_Jump_Handler.process_jump(delta)
+	player_jump_handler.process_jump(delta)
 	_handle_sideways_movement()
 	
-	animation_Handler.handle_movement_animations(velocity, input, last_Valid_Input)
+	animation_handler.handle_movement_animations(velocity, input, last_valid_input)
 	move_and_slide()
 	
 
 func _handle_sideways_movement() -> void:
 	if input.x != 0:
 		velocity.x = input.x * SPEED
-		last_Valid_Input.x = input.x
+		last_valid_input.x = input.x
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED * SPEED_SLOWDOWN_MULTIPLIER)
 	
 
 func start_interaction_process(newInteractionNode: Interactable) -> void:
-	InteractionNode = newInteractionNode
+	interaction_node = newInteractionNode
 
 func stop_interaction_process() -> void:
-	InteractionNode = null
+	interaction_node = null

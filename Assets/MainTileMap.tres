@@ -1,7 +1,10 @@
-[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://bi7nd8cstwqu6"]
+[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://bi7nd8cstwqu6"]
 
 [ext_resource type="Texture2D" uid="uid://wtysgwxv6i5b" path="res://Assets/Kings and Pigs/Sprites/14-TileSets/Terrain (32x32).png" id="1_iwbkg"]
 [ext_resource type="Texture2D" uid="uid://ba7tcg22lv15c" path="res://Assets/Kings and Pigs/Sprites/14-TileSets/Decorations (32x32).png" id="2_t2yuv"]
+[ext_resource type="PackedScene" uid="uid://bqb2cyyravaiq" path="res://Scenes/Game Objects/Diamond.tscn" id="3_rwgh2"]
+[ext_resource type="PackedScene" uid="uid://nnu4xqibasl4" path="res://Scenes/Game Objects/BigPlatform.tscn" id="5_ahvoc"]
+[ext_resource type="PackedScene" uid="uid://3ktea2kooye1" path="res://Scenes/Game Objects/SmallPlatform.tscn" id="6_wkq55"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r7486"]
 texture = ExtResource("1_iwbkg")
@@ -375,8 +378,15 @@ texture_region_size = Vector2i(32, 32)
 2:3/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:3/0/physics_layer_0/angular_velocity = 0.0
 
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_rp5bd"]
+resource_name = "Game Objects"
+scenes/1/scene = ExtResource("3_rwgh2")
+scenes/3/scene = ExtResource("5_ahvoc")
+scenes/4/scene = ExtResource("6_wkq55")
+
 [resource]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_r7486")
 sources/1 = SubResource("TileSetAtlasSource_1l1ab")
+sources/3 = SubResource("TileSetScenesCollectionSource_rp5bd")

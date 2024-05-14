@@ -5,7 +5,7 @@ class_name ApplyDamageOnTouch
 
 func _on_body_entered(body):
 	print("Body entered damage zone: %s" %body.name)
-	var NodeHealth = Health.TryGetNodeHealth(body)
+	var NodeHealth = HealthComponent.TryGetNodeHealth(body)
 	if NodeHealth:
 		NodeHealth.RemoveHealthAmount(damageOnTouch)
 	

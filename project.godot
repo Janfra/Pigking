@@ -13,7 +13,11 @@ config_version=5
 config/name="Pigking"
 run/main_scene="res://Scenes/Levels/Tutorial_level.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://Assets/Kings and Pigs/Sprites/Kings and Pigs.png"
+
+[autoload]
+
+EventBus="*res://Scripts/event_bus.gd"
 
 [display]
 

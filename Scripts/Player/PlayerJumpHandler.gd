@@ -1,5 +1,5 @@
-extends Node
 class_name PlayerJumpHandler
+extends Node
 
 const MINIMUM_GRAVITY_MULTIPLIER = 0.01
 
@@ -9,42 +9,42 @@ const MINIMUM_GRAVITY_MULTIPLIER = 0.01
 @export var player:CharacterBody2D
 
 @export_subgroup("Velocity")
-@export var jumpVelocity:float = -300.0
-@export var jumpCutMultiplier:float = 0.2
+@export var jump_velocity:float = -300.0
+@export var jump_cut_multiplier:float = 0.2
 
 @export_subgroup("Falling Speed")
-@export var fallingGravityMultiplier:float = 1
-@export var ascendingGravityMultiplier:float = 1
-@export var downInputGravityMultiplier:float = 1.2
-@export var maxFallSpeed:float = 300
+@export var falling_gravity_multiplier:float = 1
+@export var ascending_gravity_multiplier:float = 1
+@export var down_input_gravity_multiplier:float = 1.2
+@export var max_fall_speed:float = 300
 
 @export_subgroup("Grace Timers")
-@export var coyoteTime:float = 0.2
-@export var jumpQueuedTime:float = 0.2
+@export var coyote_time:float = 0.2
+@export var jump_queued_time:float = 0.2
 #endregion
 
 #region Logic booleans
 # INFO: Has coyote time already being applied
-var hasCoyoteTime:bool = false
+var has_coyote_time:bool = false
 
 # INFO: Has the player already jumped
-var hasJumped:bool = false
+var has_jumped:bool = false
 
 # INFO: Is the player able to perform a jump
-var canJump:bool = false
+var can_jump:bool = false
 
 # INFO: Can jump cut be performed
-var canJumpCut:bool = false
+var can_jump_cut:bool = false
 
-var isFalling:bool = false
+var is_falling:bool = false
 
-var isDownInput:bool = false
+var is_down_input:bool = false
 #endregion
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 @onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var coyoteTime_Timer:Timer 
-var jumpInput_Timer:Timer
+var coyote_time_timer:Timer 
+var jump_input_timer:Timer
 
 #region Warning Check
 func _get_configuration_warnings():
@@ -55,24 +55,21 @@ func _get_configuration_warnings():
 #endregion
 
 func try_jump() -> void:
-	if hasJumped:
-		return
-	
 	if !_is_jump_valid():
-		jumpInput_Timer.start(jumpQueuedTime)
+		jump_input_timer.start(jump_queued_time)
 		return
 	
 	_queue_jump()
 
 func try_jump_cut() -> void:
-	if !hasJumped || !canJumpCut:
+	if !can_jump || !can_jump_cut:
 		return
 	
 	_cut_jump()
 	
 
 func increase_fall_speed(isInput:bool) -> void:
-	isDownInput = isInput
+	is_down_input = isInput
 	
 
 #region Init
@@ -87,20 +84,20 @@ func _ready() -> void:
 	
 
 func _setup_coyote_time_timer() -> void:
-	coyoteTime_Timer = Timer.new()
-	add_child(coyoteTime_Timer)
-	coyoteTime_Timer.owner = owner
-	coyoteTime_Timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
-	coyoteTime_Timer.one_shot = true
-	coyoteTime_Timer.timeout.connect(self._invalidate_coyote_time.bind())
+	coyote_time_timer = Timer.new()
+	add_child(coyote_time_timer)
+	coyote_time_timer.owner = owner
+	coyote_time_timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
+	coyote_time_timer.one_shot = true
+	coyote_time_timer.timeout.connect(self._invalidate_coyote_time.bind())
 	
 
 func _setup_jump_input_timer() -> void:
-	jumpInput_Timer = Timer.new()
-	add_child(jumpInput_Timer)
-	jumpInput_Timer.owner = owner
-	jumpInput_Timer.process_callback = Timer.TIMER_PROCESS_IDLE
-	jumpInput_Timer.one_shot = true
+	jump_input_timer = Timer.new()
+	add_child(jump_input_timer)
+	jump_input_timer.owner = owner
+	jump_input_timer.process_callback = Timer.TIMER_PROCESS_IDLE
+	jump_input_timer.one_shot = true
 	
 #endregion
 
@@ -117,16 +114,16 @@ func process_jump(delta:float) -> void:
 	else:
 		_handle_landing()
 	 
-	if(!jumpInput_Timer.is_stopped() && _is_jump_valid()):
+	if(!jump_input_timer.is_stopped() && _is_jump_valid()):
 		_queue_jump()
 	
 
 func _handle_off_ground(delta: float) -> void:
-	isFalling = player.velocity.y > 0
+	is_falling = player.velocity.y > 0
 	_apply_gravity(delta)
 	
-	if isFalling:
-		canJumpCut = false
+	if is_falling:
+		can_jump_cut = false
 		_clamp_fall_speed()
 	
 	if _should_coyote_time_start():
@@ -134,10 +131,10 @@ func _handle_off_ground(delta: float) -> void:
 	
 
 func _handle_landing() -> void:
-	hasJumped = false
-	hasCoyoteTime = false
-	canJumpCut = true
-	canJump = true
+	has_jumped = false
+	has_coyote_time = false
+	can_jump_cut = true
+	can_jump = true
 	_stop_coyote_time()
 	
 
@@ -146,16 +143,16 @@ func _handle_landing() -> void:
 #region Falling Speed / Gravity
 
 func _clamp_fall_speed() -> void:
-	player.velocity.y = min(maxFallSpeed, player.velocity.y)
+	player.velocity.y = min(max_fall_speed, player.velocity.y)
 
 func _apply_gravity(delta:float) -> void:
-	if isDownInput:
-		player.velocity.y += (gravity * downInputGravityMultiplier) * delta
+	if is_down_input:
+		player.velocity.y += (gravity * down_input_gravity_multiplier) * delta
 	else:
-		if isFalling:
-			player.velocity.y += (gravity * fallingGravityMultiplier) * delta
+		if is_falling:
+			player.velocity.y += (gravity * falling_gravity_multiplier) * delta
 		else:
-			player.velocity.y += (gravity * ascendingGravityMultiplier) * delta
+			player.velocity.y += (gravity * ascending_gravity_multiplier) * delta
 	
 
 #endregion
@@ -163,44 +160,44 @@ func _apply_gravity(delta:float) -> void:
 #region Jump logic
 func _jump() -> void:
 	player.velocity.y = 0
-	player.velocity.y += jumpVelocity
-	canJump = false
-	hasJumped = true
+	player.velocity.y += jump_velocity
+	can_jump = false
+	has_jumped = true
 
 func _cut_jump() -> void:
-	player.velocity.y -= player.velocity.y * (1 - jumpCutMultiplier)
-	canJumpCut = false
+	player.velocity.y -= player.velocity.y * (1 - jump_cut_multiplier)
+	can_jump_cut = false
 	
 
 func _is_jump_queued() -> bool:
-	return hasJumped && canJump
+	return has_jumped && can_jump
 
 func _queue_jump() -> void:
-	hasJumped = true
-	canJump = true
-	jumpInput_Timer.stop()
+	has_jumped = true
+	can_jump = true
+	jump_input_timer.stop()
 
 func _is_jump_valid() -> bool:
-	return !coyoteTime_Timer.is_stopped() || player.is_on_floor()
+	return !coyote_time_timer.is_stopped() || player.is_on_floor()
 #endregion
 
 #region Coyote Time
 func _should_coyote_time_start() -> bool:
-	return !hasJumped && !hasCoyoteTime && coyoteTime_Timer.is_stopped()
+	return !has_jumped && !has_coyote_time && coyote_time_timer.is_stopped()
 
 func _start_coyote_time() -> void:
-	coyoteTime_Timer.start(coyoteTime)
+	coyote_time_timer.start(coyote_time)
 	
 
 func _stop_coyote_time() -> void:
-	if coyoteTime_Timer.is_stopped():
+	if coyote_time_timer.is_stopped():
 		return
 	
-	coyoteTime_Timer.stop()
-	hasCoyoteTime = true
+	coyote_time_timer.stop()
+	has_coyote_time = true
 	
 
 func _invalidate_coyote_time() -> void:
-	hasCoyoteTime = true
+	has_coyote_time = true
 	
 #endregion

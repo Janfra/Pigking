@@ -1,9 +1,9 @@
 extends Node
-class_name Health
+class_name HealthComponent
 
 #region Static Getter and Setter
 static var s_nodeToHealth:Dictionary
-static func _RegisterNodeToHealth(Owner:Node, HealthNode:Health) -> void:
+static func _RegisterNodeToHealth(Owner:Node, HealthNode:HealthComponent) -> void:
 	if !Owner || s_nodeToHealth.has(Owner):
 		printerr("%s is trying to registered invalid health owner" %Owner.name)
 		return
@@ -21,7 +21,7 @@ static func _UnRegisterNodeHealth(Owner:Node):
 	s_nodeToHealth.erase(Owner)
 	
 
-static func TryGetNodeHealth(Target:Node) -> Health:
+static func TryGetNodeHealth(Target:Node) -> HealthComponent:
 	if !Target || !s_nodeToHealth.has(Target):
 		return null
 	
@@ -58,14 +58,14 @@ var invulnerability_timer:Timer
 
 func _ready() -> void:
 	health = maxHealth
-	Health._RegisterNodeToHealth(owner, self)
+	HealthComponent._RegisterNodeToHealth(owner, self)
 	_setup_invulnerability_timer()
 	
 
 #INFO: Destructor equivalent
 func _exit_tree():
 	assert(owner, "No owner set on health node when exiting tree")
-	Health._UnRegisterNodeHealth(owner)
+	HealthComponent._UnRegisterNodeHealth(owner)
 	
 
 func _setup_invulnerability_timer() -> void:

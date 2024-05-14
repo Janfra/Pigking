@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LevelDataLink" load_steps=2 format=3 uid="uid://dm2jffdtxragw"]
+
+[ext_resource type="Script" path="res://Scripts/DataTranfering/LevelDataLink.gd" id="1_ehs2y"]
+
+[resource]
+script = ExtResource("1_ehs2y")
+linked_to = "Player Character Data"
+are_keys_set = null
