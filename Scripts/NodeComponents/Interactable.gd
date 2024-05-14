@@ -1,5 +1,6 @@
 class_name Interactable
 extends Area2D
+## Enables interaction on node
 
 signal On_Interacted
 var player:PlayerCharacter

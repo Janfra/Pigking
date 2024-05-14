@@ -1,13 +1,17 @@
 class_name LevelHandler
 extends RefCounted
 
+#region Static Variables
 static var s_data_to_transfer:Dictionary
 static var s_transition:AnimationPlayer
 static var s_is_transitioning:bool
+#endregion
 
+#region Consts
 const scene_transition = preload("res://Scenes/LevelTransition.tscn")
 const start_transitio_animation = "StartTransition"
 const end_transition_animation = "EndTransition"
+#endregion
 
 static func load_level(requestingNode:Node, level:PackedScene) -> void:
 	if s_is_transitioning:
@@ -48,6 +52,7 @@ static func load_level(requestingNode:Node, level:PackedScene) -> void:
 	print("Transitioned to new level")
 	
 
+## Setups reference to scene transition
 static func _create_transition(rootProvider:SceneTree) -> bool:
 	# INFO: Create and find the animation player
 	var transitionInstance = scene_transition.instantiate()

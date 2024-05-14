@@ -1,71 +1,76 @@
-extends Node
 class_name HealthComponent
+extends Node
+## Handles health and health related states of node
 
 #region Static Getter and Setter
-static var s_nodeToHealth:Dictionary
-static func _RegisterNodeToHealth(Owner:Node, HealthNode:HealthComponent) -> void:
-	if !Owner || s_nodeToHealth.has(Owner):
+static var s_node_to_health:Dictionary
+static func _register_node_to_health(Owner:Node, HealthNode:HealthComponent) -> void:
+	if !Owner || s_node_to_health.has(Owner):
 		printerr("%s is trying to registered invalid health owner" %Owner.name)
 		return
 	
 	print("Registered node: %s" %Owner.name)
-	s_nodeToHealth[Owner] = HealthNode
+	s_node_to_health[Owner] = HealthNode
 	
 
-static func _UnRegisterNodeHealth(Owner:Node):
-	if !Owner || !s_nodeToHealth.has(Owner):
+static func _unregister_node_health(Owner:Node):
+	if !Owner || !s_node_to_health.has(Owner):
 		printerr("%s is trying to unregistered invalid health owner" %Owner.name)
 		return
 	
 	print("Unregistered node: %s" %Owner.name)
-	s_nodeToHealth.erase(Owner)
+	s_node_to_health.erase(Owner)
 	
 
-static func TryGetNodeHealth(Target:Node) -> HealthComponent:
-	if !Target || !s_nodeToHealth.has(Target):
+static func try_get_node_health(Target:Node) -> HealthComponent:
+	if !Target || !s_node_to_health.has(Target):
 		return null
 	
-	return s_nodeToHealth[Target]
+	return s_node_to_health[Target]
 	
 
 #endregion
 
 #region Signals
-signal OnHealthAdded(newHealth:int, ReducedBy:int)
-signal OnHealthRemoved(newHealth:int, ReducedBy:int)
-signal OnHealthRefilled(isRevive:bool)
-signal OnHealthDepleted
+signal on_health_added(newHealth:int, ReducedBy:int)
+signal on_health_removed(newHealth:int, ReducedBy:int)
+signal on_health_refilled(isRevive:bool)
+signal on_health_depleted
 
 #endregion
 
-@export var maxHealth:int = 1:
+#region Exported Variables
+@export var max_health:int = 1:
 	get:
-		return maxHealth
+		return max_health
 	set(value):
-		maxHealth = max(value, 0) 
+		max_health = max(value, 0) 
 
-@export var invulnerabilityTime:float = 0.2 
+@export var invulnerability_time:float = 0.2 
+#endregion
 
+#region Internal Variables
 var health:int:
 	get:
 		assert(health > -1)
 		return health
 	set(value):
 		value = max(value, 0)
-		health = min(value, maxHealth)
+		health = min(value, max_health)
 
 var invulnerability_timer:Timer 
+#endregion
 
 func _ready() -> void:
-	health = maxHealth
-	HealthComponent._RegisterNodeToHealth(owner, self)
+	health = max_health
+	HealthComponent._register_node_to_health(owner, self)
 	_setup_invulnerability_timer()
 	
 
 #INFO: Destructor equivalent
 func _exit_tree():
 	assert(owner, "No owner set on health node when exiting tree")
-	HealthComponent._UnRegisterNodeHealth(owner)
+	HealthComponent._unregister_node_health(owner)
 	
 
 func _setup_invulnerability_timer() -> void:
@@ -76,31 +81,31 @@ func _setup_invulnerability_timer() -> void:
 	invulnerability_timer.process_callback = Timer.TIMER_PROCESS_IDLE
 	
 
-func RemoveHealthAmount(value:int) -> void:
+func remove_health_amount(value:int) -> void:
 	if !invulnerability_timer.is_stopped(): 
 		print("Tried to damage %s while invulnerable" %owner.name)
 		return
 	
 	health -= value
-	OnHealthRemoved.emit(health, value)
-	invulnerability_timer.start(invulnerabilityTime)
+	on_health_removed.emit(health, value)
+	invulnerability_timer.start(invulnerability_time)
 	
 	if health == 0:
-		OnHealthDepleted.emit()
+		on_health_depleted.emit()
 	
-	print("Health after damage: %s - Max health: %s" % [health, maxHealth])
+	print("Health after damage: %s - Max health: %s" % [health, max_health])
 	
 
-func AddHealthAmount(value:int) -> void:
+func add_health_amount(value:int) -> void:
 	health += value
-	OnHealthAdded.emit(health, value)
+	on_health_added.emit(health, value)
 	
-	print("Health after heal: %s - Max health: %s" % [health, maxHealth])
+	print("Health after heal: %s - Max health: %s" % [health, max_health])
 	
 
-func SetHealthToMax(isRevive:bool = true) -> void:
-	health = maxHealth
-	OnHealthRefilled.emit(isRevive)
+func set_health_to_max(isRevive:bool = true) -> void:
+	health = max_health
+	on_health_refilled.emit(isRevive)
 	
 	print("Health reset")
 	

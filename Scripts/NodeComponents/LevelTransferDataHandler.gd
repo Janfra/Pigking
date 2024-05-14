@@ -1,6 +1,7 @@
 @tool
 class_name LevelTransferDataHandler
 extends Node
+## Handles setting and retrieving data on [LevelDataLink] for syncing in between scenes
 
 @export var disabled:bool
 @export var receive_data:bool

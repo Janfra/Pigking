@@ -1,11 +1,14 @@
-extends Area2D
 class_name ApplyDamageOnTouch
+extends Area2D
+## Deals damage on overlap to nodes health
 
-@export var damageOnTouch:int = 1
+## Damage that will be dealt on start of overlap
+@export var damage_on_touch:int = 1
 
+## Check if overlap has health and remove health
 func _on_body_entered(body):
 	print("Body entered damage zone: %s" %body.name)
-	var NodeHealth = HealthComponent.TryGetNodeHealth(body)
+	var NodeHealth = HealthComponent.try_get_node_health(body)
 	if NodeHealth:
-		NodeHealth.RemoveHealthAmount(damageOnTouch)
+		NodeHealth.remove_health_amount(damage_on_touch)
 	

@@ -234,7 +234,6 @@ spriteXOffsetOnFlip = -15.5
 [node name="HealthComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_vtvc2")
-maxHealth = 3
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 visible = false
