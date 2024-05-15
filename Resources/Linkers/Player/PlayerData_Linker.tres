@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_ehs2y")
 linked_to = "Player Character Data"
-are_keys_set = null
+are_keys_set = false
