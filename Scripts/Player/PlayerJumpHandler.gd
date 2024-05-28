@@ -17,6 +17,7 @@ const MINIMUM_GRAVITY_MULTIPLIER = 0.01
 @export var ascending_gravity_multiplier:float = 1
 @export var down_input_gravity_multiplier:float = 1.2
 @export var max_fall_speed:float = 300
+@export var max_down_fall_speed:float = 350
 
 @export_subgroup("Grace Timers")
 @export var coyote_time:float = 0.2
@@ -143,7 +144,13 @@ func _handle_landing() -> void:
 #region Falling Speed / Gravity
 
 func _clamp_fall_speed() -> void:
-	player.velocity.y = min(max_fall_speed, player.velocity.y)
+	var max_fall:float
+	if is_down_input:
+		max_fall = max_down_fall_speed
+	else:
+		max_fall = max_fall_speed
+	
+	player.velocity.y = min(max_fall, player.velocity.y)
 
 func _apply_gravity(delta:float) -> void:
 	if is_down_input:

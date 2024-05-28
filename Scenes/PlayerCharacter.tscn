@@ -228,6 +228,7 @@ jump_cut_multiplier = 0.78
 falling_gravity_multiplier = 1.5
 down_input_gravity_multiplier = 2.5
 max_fall_speed = 350.0
+max_down_fall_speed = 420.0
 
 [node name="PlayerAnimationHandler" type="Node" parent="." node_paths=PackedStringArray("animated_sprite")]
 unique_name_in_owner = true
