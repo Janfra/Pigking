@@ -27,10 +27,12 @@ void fragment() {
 	
 	noiseTexture2.r = pow(noiseTexture2.r, 0.4);
 	
-	vec4 finalNoise = noiseTexture1 * noiseTexture2 + pow(UV.g, 3);
+	float flatBottom = pow(UV.g, 3);
+	vec4 finalNoise = noiseTexture1 * noiseTexture2 + flatBottom;
 	
 	finalNoise.r = pow(finalNoise.r, 1.0);
 	
-	COLOR.rgb = color;
+	vec3 colorNoise = noiseTexture1.rbg * noiseTexture2.rgb * flatBottom;
+	COLOR.rgb = color + (colorNoise * 0.05);
 	COLOR.a = pow(UV.g, blurIntensity) * flatColorHeight * (finalNoise.r);
 }

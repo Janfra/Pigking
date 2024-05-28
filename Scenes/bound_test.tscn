@@ -30,7 +30,7 @@ shader_parameter/noiseYSpeed2 = 0.1
 shader_parameter/noise = SubResource("NoiseTexture2D_p0e20")
 
 [node name="BoundTest" type="Sprite2D"]
-z_index = 2
+z_index = 1
 z_as_relative = false
 texture_repeat = 2
 material = SubResource("ShaderMaterial_sxlrn")

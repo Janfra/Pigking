@@ -62,7 +62,7 @@ func try_jump() -> void:
 	_queue_jump()
 
 func try_jump_cut() -> void:
-	if !can_jump || !can_jump_cut:
+	if !can_jump && !can_jump_cut:
 		return
 	
 	_cut_jump()
